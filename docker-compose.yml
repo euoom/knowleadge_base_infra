@@ -1,0 +1,71 @@
+services:
+  npm:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: nginx-proxy-manager
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '81:81'
+    volumes:
+      - npm_data:/data
+      - letsencrypt:/etc/letsencrypt
+    networks:
+      - internal_network
+
+  backend:
+    container_name: knowleadge_base_discord_bot
+    restart: unless-stopped
+    build:
+      # docker-compose.yml 위치에서 discord_bot 소스코드 폴더까지의 상대 경로
+      context: ../knowleadge_base_discord_bot
+      dockerfile: Dockerfile
+    networks:
+      - internal_network
+
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_POSTGRESDB_DATABASE}
+      POSTGRES_USER: ${DB_POSTGRESDB_USER}
+      POSTGRES_PASSWORD: ${DB_POSTGRESDB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal_network
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    environment:
+      N8N_HOST: ${DOMAIN_NAME}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: https
+      NODE_ENV: production
+      WEBHOOK_URL: https://${DOMAIN_NAME}/
+      GENERIC_TIMEZONE: Asia/Seoul
+      TZ: Asia/Seoul
+      N8N_RUNNERS_ENABLED: true
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_DATABASE: ${DB_POSTGRESDB_DATABASE}
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_USER: ${DB_POSTGRESDB_USER}
+      DB_POSTGRESDB_SCHEMA: public
+      DB_POSTGRESDB_PASSWORD: ${DB_POSTGRESDB_PASSWORD}
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - internal_network
+    depends_on:
+      - postgres
+
+networks:
+  internal_network:
+
+volumes:
+  n8n_data:
+  postgres_data:
+  npm_data:
+  letsencrypt:
