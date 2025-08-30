@@ -13,7 +13,7 @@ services:
     networks:
       - internal_network
 
-  backend:
+  discord_bot:
     container_name: knowleadge_base_discord_bot
     restart: unless-stopped
     ports:
