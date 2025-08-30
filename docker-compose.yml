@@ -16,6 +16,8 @@ services:
   backend:
     container_name: knowleadge_base_discord_bot
     restart: unless-stopped
+    ports:
+      - '8000:8000'
     build:
       # docker-compose.yml 위치에서 discord_bot 소스코드 폴더까지의 상대 경로
       context: ../knowleadge_base_discord_bot
