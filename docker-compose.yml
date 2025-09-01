@@ -18,6 +18,9 @@ services:
       POSTGRES_DB: ${DB_POSTGRESDB_DATABASE}
       POSTGRES_USER: ${DB_POSTGRESDB_USER}
       POSTGRES_PASSWORD: ${DB_POSTGRESDB_PASSWORD}
+      LANG: en_US.utf8
+      LANGUAGE: en_US:en
+      LC_ALL: en_US.utf8
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
     networks:
