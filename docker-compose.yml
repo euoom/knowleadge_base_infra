@@ -12,7 +12,7 @@ services:
       - internal_network
 
   postgres:
-    image: postgres:latest
+    image: postgres:16
     restart: always
     environment:
       POSTGRES_DB: ${DB_POSTGRESDB_DATABASE}
