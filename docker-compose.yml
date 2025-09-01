@@ -1,18 +1,4 @@
 services:
-  npm:
-    image: 'jc21/nginx-proxy-manager:latest'
-    container_name: nginx-proxy-manager
-    restart: unless-stopped
-    ports:
-      - '80:80'
-      - '443:443'
-      - '81:81'
-    volumes:
-      - npm_data:/data
-      - letsencrypt:/etc/letsencrypt
-    networks:
-      - internal_network
-
   discord_bot:
     container_name: knowleadge_base_discord_bot
     restart: unless-stopped
