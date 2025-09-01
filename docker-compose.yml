@@ -12,14 +12,14 @@ services:
       - internal_network
 
   postgres:
-    image: postgres:16
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_DB: ${DB_POSTGRESDB_DATABASE}
       POSTGRES_USER: ${DB_POSTGRESDB_USER}
       POSTGRES_PASSWORD: ${DB_POSTGRESDB_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
     networks:
       - internal_network
 
@@ -53,7 +53,3 @@ services:
 
 networks:
   internal_network:
-
-volumes:
-  n8n_data:
-  postgres_data:
