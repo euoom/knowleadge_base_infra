@@ -1,0 +1,9 @@
+# templates/01-config.yml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  DOMAIN_NAME: {{ .Values.domain | quote }}
+  ACME_EMAIL: {{ .Values.acmeEmail | quote }}
+  TZ: {{ .Values.timezone | quote }}

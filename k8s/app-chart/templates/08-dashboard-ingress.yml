@@ -1,0 +1,18 @@
+# templates/08-dashboard-ingress.yml
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard-ingressroute
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`{{ .Values.domain }}`) && PathPrefix(`{{ .Values.traefik.dashboard.path }}`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
+      middlewares:
+        - name: auth-middleware
+  tls:
+    certResolver: myresolver

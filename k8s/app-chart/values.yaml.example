@@ -1,0 +1,50 @@
+# Example values for my-app-chart.
+# Copy this file to values.yaml and fill in your actual values.
+
+# -- Global domain configuration
+domain: "your-domain.com" # IMPORTANT: Change this to your domain
+acmeEmail: "your-email@example.com" # IMPORTANT: Change this to your email for Let's Encrypt
+timezone: "Asia/Seoul" # Or your timezone
+
+# -- Per-service configuration
+n8n:
+  image: docker.n8n.io/n8nio/n8n:1.110.1
+  path: /n8n
+  storage: 5Gi
+
+discord:
+  # IMPORTANT: Build this image and push it to your registry with a specific version tag
+  image: your-registry/your-app:1.0.0
+  path: /discord
+
+minio:
+  image: minio/minio:RELEASE.2025-07-23T15-54-02Z
+  path: /minio
+  consolePath: /minio-console
+  storage: 20Gi
+  rootUser: "<CHANGE_ME_MINIO_USER>"
+  rootPassword: "<CHANGE_ME_STRONG_PASSWORD>"
+  knowledgeBaseBucket: "knowleadge-base"
+  initialFolders:
+    - daily
+    - issue
+    - archive
+    - meta
+    - persona
+    - project
+    - repository
+    - template
+
+postgres:
+  image: postgres:16
+  storage: 10Gi
+  db: "<CHANGE_ME_DATABASE_NAME>"
+  user: "<CHANGE_ME_DATABASE_USER>"
+  password: "<CHANGE_ME_STRONG_PASSWORD>"
+
+traefik:
+  dashboard:
+    path: /traefik
+  auth:
+    # Generate with: htpasswd -nb admin <YOUR_PASSWORD> | base64
+    users: "<CHANGE_ME_BASE64_ENCODED_HTPASSWD>"

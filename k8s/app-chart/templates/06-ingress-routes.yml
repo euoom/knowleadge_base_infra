@@ -1,0 +1,50 @@
+# templates/06-ingress-routes.yml
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: n8n-ingressroute
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`{{ .Values.domain }}`) && PathPrefix(`{{ .Values.n8n.path }}`)
+      kind: Rule
+      services:
+        - name: n8n-svc
+          port: 5678
+  tls:
+    certResolver: myresolver
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: discord-ingressroute
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`{{ .Values.domain }}`) && PathPrefix(`{{ .Values.discord.path }}`)
+      kind: Rule
+      services:
+        - name: discord-svc
+          port: 8000
+      middlewares:
+        - name: strip-discord-prefix
+  tls:
+    certResolver: myresolver
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: minio-ingressroute
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`{{ .Values.domain }}`) && PathPrefix(`{{ .Values.minio.consolePath }}`)
+      kind: Rule
+      services:
+        - name: minio-svc
+          port: 9001
+  tls:
+    certResolver: myresolver

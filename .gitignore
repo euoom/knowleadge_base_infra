@@ -13,3 +13,6 @@ docker-compose.override.yml
 # Host-mounted data volumes
 n8n_data/
 postgres_data/
+
+# Helm values file
+k8s/app-chart/values.yaml

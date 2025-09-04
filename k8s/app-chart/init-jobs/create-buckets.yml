@@ -1,0 +1,31 @@
+# init-jobs/create-buckets.yml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-bucket-creation-job
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: minio-client
+        image: minio/mc
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Connecting to MinIO...";
+          mc alias set myminio http://minio-svc:9000 {{ .Values.minio.rootUser }} {{ .Values.minio.rootPassword }};
+          
+          BUCKET="{{ .Values.minio.knowledgeBaseBucket }}";
+          echo "Creating knowledge base bucket: $BUCKET";
+          mc mb myminio/$BUCKET || echo "Bucket '$BUCKET' already exists.";
+
+          echo "Creating initial folders...";
+          touch /tmp/empty;
+          {{- range .Values.minio.initialFolders }}
+          mc cp /tmp/empty myminio/$BUCKET/{{ . }}/;
+          echo "- myminio/$BUCKET/{{ . }}/";
+          {{- end }}
+
+          echo "Bucket setup complete.";
